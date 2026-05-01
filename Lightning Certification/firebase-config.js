@@ -1,8 +1,9 @@
 window.firebaseConfig = {
-  apiKey: "REPLACE_WITH_FIREBASE_API_KEY",
+  apiKey: "AIzaSyBjiMGyG-_14rB5EUxlnn1wJIFGPIF0vso",
   authDomain: "se-lightning-certificati-4cbf3.firebaseapp.com",
   projectId: "se-lightning-certificati-4cbf3",
   storageBucket: "se-lightning-certificati-4cbf3.firebasestorage.app",
-  messagingSenderId: "REPLACE_WITH_MESSAGING_SENDER_ID",
-  appId: "REPLACE_WITH_FIREBASE_APP_ID"
+  messagingSenderId: "913841576981",
+  appId: "1:913841576981:web:06d380a05cb8288139421c",
+  measurementId: "G-5SWT20D6TD"
 };
