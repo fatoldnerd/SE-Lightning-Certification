@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lightning SE Certification Exam — Simpro</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #152041;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP NAV ── */
+    .topnav {
+      background: #152041;
+      padding: 0 32px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .nav-brand {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-brand span {
+      color: #FBBA12;
+    }
+
+    .nav-badge {
+      background: #FBBA12;
+      color: #152041;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── HERO BANNER ── */
+    .hero {
+      background: #152041;
+      color: white;
+      padding: 36px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .hero-left {
+      flex: 1;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #FBBA12;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: #ffffff;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.5;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+
+    .hero-stat {
+      text-align: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 14px 20px;
+      min-width: 80px;
+    }
+
+    .hero-stat-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: #FBBA12;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 24px 48px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+    }
+
+    /* ── PROGRESS ── */
+    .progress-wrap {
+      margin-bottom: 20px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7a99;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      background: #dde2ec;
+      border-radius: 99px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #FBBA12;
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e0e4ef;
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(21,32,65,0.06);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .card.fade-out {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    .question-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #FBBA12;
+      background: #152041;
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #152041;
+      margin-bottom: 24px;
+    }
+
+    /* ── OPTIONS ── */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: #f7f8fc;
+      border: 2px solid #e0e4ef;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .option:hover:not(.disabled) {
+      border-color: #152041;
+      background: #f0f2f7;
+    }
+
+    .option.selected {
+      border-color: #152041;
+      background: #eef0f7;
+    }
+
+    .option.correct {
+      border-color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    .option.wrong {
+      border-color: #dc2626;
+      background: #fef2f2;
+    }
+
+    .option.disabled { cursor: default; }
+
+    .option-letter {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      border-radius: 6px;
+      background: #e0e4ef;
+      border: 2px solid #d0d5e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #6b7a99;
+      transition: all 0.15s;
+    }
+
+    .option.selected .option-letter {
+      background: #152041;
+      border-color: #152041;
+      color: #FBBA12;
+    }
+
+    .option.correct .option-letter {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #fff;
+    }
+
+    .option.wrong .option-letter {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    .option-text {
+      font-size: 14px;
+      color: #2d3a5c;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .option.correct .option-text { color: #15803d; font-weight: 600; }
+    .option.wrong .option-text { color: #b91c1c; font-weight: 600; }
+
+    /* ── FEEDBACK ── */
+    .feedback {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.55;
+      display: none;
+      border-left: 4px solid transparent;
+    }
+
+    .feedback.show { display: block; }
+
+    .feedback.correct-fb {
+      background: #f0fdf4;
+      border-color: #16a34a;
+      color: #15803d;
+    }
+
+    .feedback.wrong-fb {
+      background: #fef2f2;
+      border-color: #dc2626;
+      color: #b91c1c;
+    }
+
+    /* ── NEXT BUTTON ── */
+    .btn-next {
+      margin-top: 16px;
+      width: 100%;
+      padding: 15px;
+      background: #FBBA12;
+      color: #152041;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: none;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-next:hover { background: #e9aa00; transform: translateY(-1px); }
+    .btn-next:active { transform: translateY(0); }
+    .btn-next.show { display: block; }
+
+    /* ── INTRO SCREEN ── */
+    #intro-screen { text-align: center; }
+
+    .intro-card {
+      background: #ffffff;
+      border: 1px solid #e0e4ef;
+      border-radius: 14px;
+      padding: 36px 32px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(21,32,65,0.06);
+      text-align: left;
+    }
+
+    .intro-card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #152041;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .intro-card p {
+      font-size: 13px;
+      color: #6b7a99;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .intro-rules {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .intro-rule {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      color: #2d3a5c;
+      line-height: 1.5;
+    }
+
+    .rule-icon {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      background: #152041;
+      color: #FBBA12;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .btn-start {
+      width: 100%;
+      padding: 16px;
+      background: #FBBA12;
+      color: #152041;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-start:hover { background: #e9aa00; transform: translateY(-1px); }
+
+    .auth-panel {
+      background: #ffffff;
+      border: 1px solid #e0e4ef;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(21,32,65,0.06);
+      text-align: left;
+    }
+
+    .auth-panel h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #152041;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .auth-panel p,
+    .auth-status {
+      font-size: 13px;
+      color: #6b7a99;
+      line-height: 1.55;
+    }
+
+    .auth-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .auth-input {
+      width: 100%;
+      border: 2px solid #e0e4ef;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #152041;
+      background: #f7f8fc;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: #152041;
+      background: #ffffff;
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .btn-auth,
+    .btn-secondary {
+      border: none;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .btn-auth {
+      background: #152041;
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: #e0e4ef;
+      color: #152041;
+    }
+
+    .btn-start:disabled,
+    .btn-auth:disabled,
+    .btn-secondary:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .auth-error {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    .auth-success {
+      color: #15803d;
+      font-weight: 700;
+    }
+
+    .save-status {
+      margin: 14px auto 0;
+      max-width: 440px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.72);
+    }
+
+    /* ── RESULTS ── */
+    #results-screen { text-align: center; }
+
+    .results-hero {
+      background: #152041;
+      border-radius: 14px;
+      padding: 36px 32px;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    .score-ring {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .score-ring svg { transform: rotate(-90deg); }
+
+    .score-ring .ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.12);
+      stroke-width: 12;
+    }
+
+    .score-ring .ring-fill {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .score-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .score-pct {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+      color: #FBBA12;
+    }
+
+    .score-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 3px;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .result-badge.pass { background: #FBBA12; color: #152041; }
+    .result-badge.fail { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2); }
+
+    .result-headline {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .result-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.5;
+    }
+
+    /* ── SUMMARY ── */
+    .summary {
+      background: #ffffff;
+      border: 1px solid #e0e4ef;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(21,32,65,0.06);
+      text-align: left;
+    }
+
+    .summary-header {
+      padding: 14px 20px;
+      background: #152041;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #FBBA12;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0f2f7;
+      font-size: 13px;
+    }
+
+    .summary-row:last-child { border-bottom: none; }
+
+    .summary-icon { font-size: 15px; margin-top: 1px; min-width: 20px; }
+
+    .summary-q { color: #6b7a99; flex: 1; line-height: 1.4; }
+    .summary-q strong { color: #152041; display: block; margin-bottom: 3px; font-weight: 600; }
+
+    .btn-retry {
+      width: 100%;
+      padding: 15px;
+      background: #FBBA12;
+      color: #152041;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-retry:hover { background: #e9aa00; }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: #152041;
+      text-align: center;
+      padding: 16px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="nav-brand">Simpro <span>SE Central</span></div>
+    <div class="nav-badge">⚡ Lightning Certification</div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">SE Enablement · April 2026</div>
+      <h1>Lightning<br>Certification Exam</h1>
+      <p>Confidential — Internal Use Only</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">15</div>
+        <div class="hero-stat-label">Questions</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">70%</div>
+        <div class="hero-stat-label">To Pass</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">~10</div>
+        <div class="hero-stat-label">Minutes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="container">
+
+      <!-- INTRO SCREEN -->
+      <div id="intro-screen">
+        <div class="auth-panel" id="auth-panel">
+          <h2>Sign In</h2>
+          <p>Use your work email so your certification attempt can be saved.</p>
+          <div class="auth-grid">
+            <input class="auth-input" id="auth-name" type="text" autocomplete="name" placeholder="Full name" />
+            <input class="auth-input" id="auth-email" type="email" autocomplete="email" placeholder="Work email" />
+            <input class="auth-input" id="auth-password" type="password" autocomplete="current-password" placeholder="Password" />
+          </div>
+          <div class="auth-actions">
+            <button class="btn-auth" id="btn-signin" onclick="signIn()">Sign In</button>
+            <button class="btn-secondary" id="btn-create" onclick="createAccount()">Create Account</button>
+            <button class="btn-secondary" id="btn-signout" onclick="signOutUser()" style="display:none;">Sign Out</button>
+          </div>
+          <div class="auth-status" id="auth-status">You must sign in before starting the exam.</div>
+        </div>
+        <div class="intro-card">
+          <h2>Before You Begin</h2>
+          <p>
+            This exam covers the full Lightning platform — JustAsk, FieldReady, JobReady, JobScribe,
+            JobBrief, platform features, pricing, objection handling, and close techniques.<br>
+            Questions are based on the SE Talk Track, SE Cheat Sheet, and Sellers Kit.
+            You'll receive immediate feedback and an explanation after each answer.
+          </p>
+          <div class="intro-rules">
+            <div class="intro-rule">
+              <div class="rule-icon">15</div>
+              <span><strong>15 multiple-choice questions</strong> covering all Lightning modules and selling techniques.</span>
+            </div>
+            <div class="intro-rule">
+              <div class="rule-icon">70</div>
+              <span><strong>70% passing threshold</strong> — you need 11 out of 15 correct to earn certification.</span>
+            </div>
+            <div class="intro-rule">
+              <div class="rule-icon">↩</div>
+              <span><strong>Instant feedback</strong> on every answer, with a full review at the end. Retake anytime.</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn-start" id="btn-start" onclick="startExam()" disabled>Start Exam →</button>
+      </div>
+
+      <!-- EXAM SCREEN -->
+      <div id="exam-screen" style="display:none;">
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span id="q-counter">Question 1 of 15</span>
+            <span id="q-score">Score: 0 / 0</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="card" id="question-card">
+          <div class="question-number" id="q-number">Question 1</div>
+          <div class="question-text" id="q-text"></div>
+          <div class="options" id="q-options"></div>
+          <div class="feedback" id="q-feedback"></div>
+        </div>
+
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next Question →</button>
+      </div>
+
+      <!-- RESULTS SCREEN -->
+      <div id="results-screen" style="display:none;">
+        <div class="results-hero">
+          <div class="score-ring">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle class="ring-bg" cx="70" cy="70" r="58" />
+              <circle class="ring-fill" id="ring-fill" cx="70" cy="70" r="58"
+                stroke-dasharray="364.42"
+                stroke-dashoffset="364.42" />
+            </svg>
+            <div class="score-center">
+              <div class="score-pct" id="score-pct">0%</div>
+              <div class="score-label">Score</div>
+            </div>
+          </div>
+          <div class="result-badge" id="result-badge">—</div>
+          <div class="result-headline" id="result-headline">—</div>
+          <div class="result-sub" id="result-sub">—</div>
+          <div class="save-status" id="save-status">Saving exam attempt...</div>
+        </div>
+
+        <div class="summary" id="summary-table">
+          <div class="summary-header">Question Review</div>
+          <div id="summary-rows"></div>
+        </div>
+
+        <button class="btn-retry" onclick="retryExam()">Retake Exam</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">© 2026 Simpro Group · SE Enablement · Confidential — Internal Use Only</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="./firebase-config.js"></script>
+<script>
+const firebaseConfigured = window.firebaseConfig && !window.firebaseConfig.apiKey.includes('REPLACE_WITH');
+let auth = null;
+let db = null;
+let currentUser = null;
+let examStartedAt = null;
+
+if (firebaseConfigured) {
+  firebase.initializeApp(window.firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+} else {
+  window.addEventListener('DOMContentLoaded', () => {
+    setAuthStatus('Add your Firebase web app values to firebase-config.js before using accounts.', 'auth-error');
+  });
+}
+
+const QUESTIONS = [
+  {
+    q: "Which Lightning module must lead EVERY conversation — no exceptions?",
+    options: ["JobReady", "FieldReady", "JustAsk", "JobBrief"],
+    answer: 2,
+    explanation: "JustAsk is the cornerstone of Lightning. It leads every conversation and every close. You can abbreviate other modules — you never skip JustAsk."
+  },
+  {
+    q: "According to the Lightning materials, what is the average net profit margin for a trade business?",
+    options: ["12%", "18%", "24%", "6%"],
+    answer: 3,
+    explanation: "The average trade business runs at 6% net profit. The businesses that know their numbers run at 24%. That gap is execution capacity — not effort."
+  },
+  {
+    q: "Businesses that know their numbers in real time — by job type, tech, and customer — run at what net profit margin?",
+    options: ["12%", "18%", "24%", "30%"],
+    answer: 2,
+    explanation: "The key anchor: 6% vs 24%. The gap is not effort — it's knowing where your business actually stands. JustAsk closes that gap."
+  },
+  {
+    q: "What does FieldReady primarily do for a trade business?",
+    options: [
+      "Generates professional customer summaries after every job",
+      "Trains every tech on company workflows consistently — without a dedicated trainer",
+      "Auto-generates a job briefing before every dispatch",
+      "Captures voice documentation on site in real time"
+    ],
+    answer: 1,
+    explanation: "FieldReady is the Training & Onboarding Agent. It trains every tech on YOUR workflows, YOUR job data, YOUR system — on demand. Same standard, every tech, every time."
+  },
+  {
+    q: "How much does it typically cost to replace a tech who leaves?",
+    options: ["$5,000 – $10,000", "$15,000 – $25,000", "$30,000 – $50,000", "$60,000 – $80,000"],
+    answer: 1,
+    explanation: "Replacing one tech costs $15,000–$25,000 in recruiting, onboarding, and lost productivity. That's the number FieldReady protects."
+  },
+  {
+    q: "What is the industry average first-time fix rate that JobReady is designed to improve?",
+    options: ["50%", "65%", "75%", "85%"],
+    answer: 2,
+    explanation: "The industry average first-time fix rate is 75% — meaning 1 in 4 jobs needs a return visit. Each truck roll costs $300–$500. JobReady pushes that rate toward 90%+."
+  },
+  {
+    q: "How does JobScribe capture job documentation?",
+    options: [
+      "The tech fills in a structured digital form on their phone",
+      "Office staff transcribes notes called in after the job",
+      "The tech speaks about what they did and the system writes it automatically",
+      "Photos taken on site are scanned and converted to text"
+    ],
+    answer: 2,
+    explanation: "JobScribe removes the manual notes step entirely. The tech talks — describes what was done, found, and used — and the system captures and transcribes it in real time."
+  },
+  {
+    q: "What does JobBrief automatically send after every completed job?",
+    options: [
+      "An invoice to the customer",
+      "A professional post-job summary: what was done, found, and what's next",
+      "A tech performance report back to the office",
+      "A follow-up scheduling request for the next visit"
+    ],
+    answer: 1,
+    explanation: "JobBrief auto-generates a polished customer summary after every job. What was done, what was found, what's next. Sent automatically. For residential: fewer angry calls. For commercial: fewer billing disputes and stronger contract retention."
+  },
+  {
+    q: "What is the Lightning platform uplift price at the GTM launch rate (expires May 31)?",
+    options: ["10%", "15%", "20%", "25%"],
+    answer: 1,
+    explanation: "The launch rate is 15%. Standard list is 25%. The 15% rate expires May 31 — urgency is real. Use it."
+  },
+  {
+    q: "What does the Lightning Price Lock cap annual price increases at?",
+    options: ["5% flat per year", "10% per year", "3% + in-country CPI", "AI platform benchmark rate"],
+    answer: 2,
+    explanation: "The Price Lock guarantees annual increases of no more than 3% + in-country CPI for the full 3-year term. Average AI platforms are raising 20–25% per year. Lightning customers are protected."
+  },
+  {
+    q: "How many functions does Lightning say a profitable trade business needs to execute well — and how many do most businesses currently manage?",
+    options: [
+      "20 functions needed; most do 5",
+      "27 functions needed; most do 7",
+      "15 functions needed; most do 10",
+      "30 functions needed; most do 12"
+    ],
+    answer: 1,
+    explanation: "27 functions are needed for 24% margins. Most businesses do 7 — not for lack of will, but lack of headcount. Lightning fills the 20-function gap."
+  },
+  {
+    q: "In the Heart + Brain architecture, what represents 'the heart'?",
+    options: [
+      "JustAsk — the plain English intelligence layer",
+      "The four AI agents working together",
+      "The existing FSM platform (Simpro / AroFlo / BigChange)",
+      "Cooper, Lightning's AI intelligence layer"
+    ],
+    answer: 2,
+    explanation: "The FSM (Simpro, AroFlo, BigChange) is the heart — scheduling, dispatch, invoicing. Lightning / Cooper is the brain that sits on top. The pitch: 'Your FSM is the heart. Lightning is the brain. Today, we're installing the brain.'"
+  },
+  {
+    q: "A customer objects: 'Why am I paying more for something I already have?' What is the correct reframe?",
+    options: [
+      "Acknowledge the price is higher and justify it with competitor benchmarks",
+      "Explain that the 15% is actually less than most vendors charge for a routine annual increase — and they're getting five full-time roles on top",
+      "Offer to discount to the standard rate",
+      "Focus only on the Price Lock benefit going forward"
+    ],
+    answer: 1,
+    explanation: "The reframe: 'You're not paying more for what you have. You're adding five roles to your team you've never been able to afford. The 15% uplift is less than most vendors charge for a routine annual increase — and you get JustAsk and four AI agents on top of it.'"
+  },
+  {
+    q: "What is the closing move every Lightning conversation should end on?",
+    options: [
+      "The ROI calculation showing payback period",
+      "JustAsk — returning to the cornerstone",
+      "The Price Lock guarantee and 3-year term",
+      "The headcount argument: $200K of capability for ~$2,000 a year"
+    ],
+    answer: 1,
+    explanation: "Every Lightning close returns to JustAsk. Strip everything else away. 'Everything we just showed you flows back into Simpro — and JustAsk sits on top of all of it. The more your team uses these tools, the smarter your answers get.'"
+  },
+  {
+    q: "A customer says: 'I'm not an AI person. I don't get it.' What is the best response approach?",
+    options: [
+      "Walk them through a technical explanation of how Cooper's language model works",
+      "Agree it's complex and offer to bring in a technical specialist for a follow-up",
+      "Ground it in Tuesday morning: tech shows up prepared, notes write themselves, customer gets a summary — no AI talk needed",
+      "Pivot to the Price Lock and cost savings to avoid the AI topic"
+    ],
+    answer: 2,
+    explanation: "Ground it in a Tuesday. 'You don't need to be an AI person. Your tech shows up knowing what to fix. Notes write themselves. The customer gets a summary. That's not AI — that's just your business running better.' Plumbers buy fewer callback trips, not 'AI.'"
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let userAnswers = [];
+
+function setAuthStatus(message, className = '') {
+  const status = document.getElementById('auth-status');
+  status.className = `auth-status ${className}`.trim();
+  status.textContent = message;
+}
+
+function setAuthButtons(disabled) {
+  document.getElementById('btn-signin').disabled = disabled;
+  document.getElementById('btn-create').disabled = disabled;
+  document.getElementById('btn-signout').disabled = disabled;
+}
+
+function updateAuthUI(user) {
+  currentUser = user;
+  const isSignedIn = Boolean(user);
+  document.getElementById('btn-start').disabled = !isSignedIn;
+  document.getElementById('btn-signin').style.display = isSignedIn ? 'none' : 'inline-block';
+  document.getElementById('btn-create').style.display = isSignedIn ? 'none' : 'inline-block';
+  document.getElementById('btn-signout').style.display = isSignedIn ? 'inline-block' : 'none';
+  document.getElementById('auth-name').style.display = isSignedIn ? 'none' : 'block';
+  document.getElementById('auth-email').style.display = isSignedIn ? 'none' : 'block';
+  document.getElementById('auth-password').style.display = isSignedIn ? 'none' : 'block';
+
+  if (isSignedIn) {
+    setAuthStatus(`Signed in as ${user.displayName || user.email}.`, 'auth-success');
+  } else if (firebaseConfigured) {
+    setAuthStatus('You must sign in before starting the exam.');
+  }
+}
+
+async function createAccount() {
+  if (!auth) return;
+  const name = document.getElementById('auth-name').value.trim();
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+
+  if (!name || !email || !password) {
+    setAuthStatus('Enter your full name, email, and password to create an account.', 'auth-error');
+    return;
+  }
+
+  try {
+    setAuthButtons(true);
+    const credential = await auth.createUserWithEmailAndPassword(email, password);
+    await credential.user.updateProfile({ displayName: name });
+    await db.collection('users').doc(credential.user.uid).set({
+      displayName: name,
+      email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    updateAuthUI(auth.currentUser);
+  } catch (error) {
+    setAuthStatus(error.message, 'auth-error');
+  } finally {
+    setAuthButtons(false);
+  }
+}
+
+async function signIn() {
+  if (!auth) return;
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+
+  if (!email || !password) {
+    setAuthStatus('Enter your email and password to sign in.', 'auth-error');
+    return;
+  }
+
+  try {
+    setAuthButtons(true);
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    setAuthStatus(error.message, 'auth-error');
+  } finally {
+    setAuthButtons(false);
+  }
+}
+
+async function signOutUser() {
+  if (!auth) return;
+  await auth.signOut();
+}
+
+if (auth) {
+  auth.onAuthStateChanged(updateAuthUI);
+}
+
+function startExam() {
+  if (!currentUser) {
+    setAuthStatus('Sign in before starting the exam.', 'auth-error');
+    return;
+  }
+  examStartedAt = new Date();
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('q-number').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('q-counter').textContent = `Question ${currentQ + 1} of ${QUESTIONS.length}`;
+  document.getElementById('q-score').textContent = `Score: ${score} / ${currentQ}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const pct = (currentQ / QUESTIONS.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const optContainer = document.getElementById('q-options');
+  optContainer.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.onclick = () => selectAnswer(i);
+    div.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt}</div>
+    `;
+    optContainer.appendChild(div);
+  });
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback';
+  fb.textContent = '';
+  document.getElementById('btn-next').classList.remove('show');
+}
+
+function selectAnswer(idx) {
+  const opts = document.querySelectorAll('.option');
+  if (opts[0].classList.contains('disabled')) return;
+
+  const q = QUESTIONS[currentQ];
+  const isCorrect = idx === q.answer;
+
+  opts.forEach((o, i) => {
+    o.classList.add('disabled');
+    if (i === q.answer) o.classList.add('correct');
+    if (i === idx && !isCorrect) o.classList.add('wrong');
+    if (i === idx) o.classList.add('selected');
+  });
+
+  if (isCorrect) score++;
+
+  const fb = document.getElementById('q-feedback');
+  if (isCorrect) {
+    fb.className = 'feedback correct-fb show';
+    fb.innerHTML = `<strong>✓ Correct!</strong> ${q.explanation}`;
+  } else {
+    fb.className = 'feedback wrong-fb show';
+    fb.innerHTML = `<strong>✗ Not quite.</strong> ${q.explanation}`;
+  }
+
+  userAnswers.push({ correct: isCorrect, chosen: idx, answer: q.answer });
+  document.getElementById('q-score').textContent = `Score: ${score} / ${currentQ + 1}`;
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.classList.add('show');
+  nextBtn.textContent = currentQ < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results →';
+}
+
+function nextQuestion() {
+  const card = document.getElementById('question-card');
+  card.classList.add('fade-out');
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ >= QUESTIONS.length) {
+      showResults();
+    } else {
+      card.classList.remove('fade-out');
+      renderQuestion();
+    }
+  }, 220);
+}
+
+function showResults() {
+  document.getElementById('exam-screen').style.display = 'none';
+  const results = document.getElementById('results-screen');
+  results.style.display = 'block';
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  const passed = pct >= 70;
+
+  const circumference = 364.42;
+  const offset = circumference - (pct / 100) * circumference;
+  const ring = document.getElementById('ring-fill');
+  ring.style.stroke = passed ? '#FBBA12' : '#ef4444';
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+
+  document.getElementById('score-pct').textContent = pct + '%';
+
+  const badge = document.getElementById('result-badge');
+  badge.className = `result-badge ${passed ? 'pass' : 'fail'}`;
+  badge.textContent = passed ? '⚡ Certified' : 'Not Yet Certified';
+
+  document.getElementById('result-headline').textContent = passed
+    ? 'Congratulations — You Passed!'
+    : 'Keep Studying — You\'ll Get There.';
+
+  document.getElementById('result-sub').textContent = passed
+    ? `You scored ${score} out of ${QUESTIONS.length} questions. Lightning certification earned.`
+    : `You scored ${score} out of ${QUESTIONS.length}. You need 70% (${Math.ceil(QUESTIONS.length * 0.7)} correct) to pass. Review the materials and try again.`;
+
+  saveExamAttempt({ pct, passed });
+
+  const rows = document.getElementById('summary-rows');
+  rows.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const div = document.createElement('div');
+    div.className = 'summary-row';
+    div.innerHTML = `
+      <div class="summary-icon">${ua.correct ? '✅' : '❌'}</div>
+      <div class="summary-q">
+        <strong>${q.q}</strong>
+        ${ua.correct
+          ? `<span style="color:#15803d;">Your answer was correct.</span>`
+          : `<span style="color:#b91c1c;">Correct answer: <em>${q.options[q.answer]}</em></span>`
+        }
+      </div>
+    `;
+    rows.appendChild(div);
+  });
+}
+
+async function saveExamAttempt({ pct, passed }) {
+  const saveStatus = document.getElementById('save-status');
+  if (!db || !currentUser) {
+    saveStatus.textContent = 'Exam attempt was not saved because Firebase is not configured or you are signed out.';
+    return;
+  }
+
+  saveStatus.textContent = 'Saving exam attempt...';
+
+  const completedAt = new Date();
+  const durationSeconds = examStartedAt
+    ? Math.max(0, Math.round((completedAt.getTime() - examStartedAt.getTime()) / 1000))
+    : null;
+
+  const answers = userAnswers.map((ua, i) => {
+    const q = QUESTIONS[i];
+    return {
+      questionIndex: i,
+      question: q.q,
+      chosenIndex: ua.chosen,
+      chosenText: q.options[ua.chosen],
+      correctIndex: q.answer,
+      correctText: q.options[q.answer],
+      isCorrect: ua.correct
+    };
+  });
+
+  try {
+    await db.collection('examAttempts').add({
+      examId: 'lightning-se-certification',
+      examVersion: '2026-04-v1',
+      examTitle: 'Lightning SE Certification Exam',
+      uid: currentUser.uid,
+      displayName: currentUser.displayName || '',
+      email: currentUser.email || '',
+      score,
+      totalQuestions: QUESTIONS.length,
+      percent: pct,
+      passed,
+      passingPercent: 70,
+      answers,
+      durationSeconds,
+      startedAt: examStartedAt ? firebase.firestore.Timestamp.fromDate(examStartedAt) : null,
+      completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      clientCompletedAt: firebase.firestore.Timestamp.fromDate(completedAt)
+    });
+    await db.collection('users').doc(currentUser.uid).set({
+      displayName: currentUser.displayName || '',
+      email: currentUser.email || '',
+      lastAttemptAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    saveStatus.textContent = 'Exam attempt saved to Firebase.';
+  } catch (error) {
+    saveStatus.textContent = `Exam attempt could not be saved: ${error.message}`;
+  }
+}
+
+function retryExam() {
+  currentQ = 0;
+  score = 0;
+  userAnswers = [];
+  examStartedAt = new Date();
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  document.getElementById('ring-fill').style.strokeDashoffset = '364.42';
+  renderQuestion();
+}
+</script>
+</body>
+</html>

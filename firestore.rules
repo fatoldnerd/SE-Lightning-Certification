@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsUserDoc(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow create, update: if ownsUserDoc(userId)
+        && request.resource.data.keys().hasOnly([
+          'displayName',
+          'email',
+          'createdAt',
+          'updatedAt',
+          'lastAttemptAt'
+        ]);
+      allow read: if ownsUserDoc(userId);
+      allow delete: if false;
+    }
+
+    match /examAttempts/{attemptId} {
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'examId',
+          'examVersion',
+          'examTitle',
+          'uid',
+          'displayName',
+          'email',
+          'score',
+          'totalQuestions',
+          'percent',
+          'passed',
+          'passingPercent',
+          'answers',
+          'durationSeconds',
+          'startedAt',
+          'completedAt',
+          'clientCompletedAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.examId == 'lightning-se-certification'
+        && request.resource.data.examVersion is string
+        && request.resource.data.examTitle is string
+        && request.resource.data.displayName is string
+        && request.resource.data.email is string
+        && request.resource.data.score is int
+        && request.resource.data.totalQuestions is int
+        && request.resource.data.percent is int
+        && request.resource.data.passed is bool
+        && request.resource.data.passingPercent is int
+        && request.resource.data.answers is list
+        && (request.resource.data.durationSeconds == null || request.resource.data.durationSeconds is int)
+        && (request.resource.data.startedAt == null || request.resource.data.startedAt is timestamp)
+        && request.resource.data.completedAt is timestamp
+        && request.resource.data.clientCompletedAt is timestamp;
+
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}
