@@ -1,6 +1,7 @@
 # Firebase Setup
 
-This project is configured as a static Firebase Hosting app with Firebase Auth and Firestore.
+This project is configured for Firebase App Hosting with Firebase Auth and Firestore.
+The App Hosting root directory is the repository root because `package.json` lives there.
 
 ## 1. Create or select a Firebase project
 
@@ -30,11 +31,18 @@ Install the Firebase CLI if needed:
 npm install -g firebase-tools
 ```
 
-Then from this folder:
+Then from this folder for classic Firebase Hosting:
 
 ```sh
 firebase login
 firebase deploy
+```
+
+For Firebase App Hosting in the Firebase Console, select:
+
+```text
+App root directory: /
+Live branch: main
 ```
 
 ## Data Written

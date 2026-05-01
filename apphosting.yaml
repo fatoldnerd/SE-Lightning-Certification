@@ -1,0 +1,5 @@
+# Firebase App Hosting configuration.
+# Runtime settings can be adjusted here later if needed.
+runConfig:
+  minInstances: 0
+  maxInstances: 10
