@@ -707,6 +707,7 @@
             <input class="auth-input" id="auth-password" type="password" autocomplete="current-password" placeholder="Password" />
           </div>
           <div class="auth-actions">
+            <button class="btn-auth" id="btn-google" onclick="signInWithGoogle()">Continue With Google</button>
             <button class="btn-auth" id="btn-signin" onclick="signIn()">Sign In</button>
             <button class="btn-secondary" id="btn-create" onclick="createAccount()">Create Account</button>
             <button class="btn-secondary" id="btn-signout" onclick="signOutUser()" style="display:none;">Sign Out</button>
@@ -961,6 +962,7 @@ function setAuthStatus(message, className = '') {
 }
 
 function setAuthButtons(disabled) {
+  document.getElementById('btn-google').disabled = disabled;
   document.getElementById('btn-signin').disabled = disabled;
   document.getElementById('btn-create').disabled = disabled;
   document.getElementById('btn-signout').disabled = disabled;
@@ -970,6 +972,7 @@ function updateAuthUI(user) {
   currentUser = user;
   const isSignedIn = Boolean(user);
   document.getElementById('btn-start').disabled = !isSignedIn;
+  document.getElementById('btn-google').style.display = isSignedIn ? 'none' : 'inline-block';
   document.getElementById('btn-signin').style.display = isSignedIn ? 'none' : 'inline-block';
   document.getElementById('btn-create').style.display = isSignedIn ? 'none' : 'inline-block';
   document.getElementById('btn-signout').style.display = isSignedIn ? 'inline-block' : 'none';
@@ -1026,6 +1029,27 @@ async function signIn() {
   try {
     setAuthButtons(true);
     await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    setAuthStatus(error.message, 'auth-error');
+  } finally {
+    setAuthButtons(false);
+  }
+}
+
+async function signInWithGoogle() {
+  if (!auth) return;
+
+  try {
+    setAuthButtons(true);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    const credential = await auth.signInWithPopup(provider);
+    await db.collection('users').doc(credential.user.uid).set({
+      displayName: credential.user.displayName || '',
+      email: credential.user.email || '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
   } catch (error) {
     setAuthStatus(error.message, 'auth-error');
   } finally {
