@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lightning Certification Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #152041;
+      min-height: 100vh;
+    }
+    .topnav {
+      background: #152041;
+      color: #fff;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+    .brand { font-weight: 800; }
+    .brand span { color: #FBBA12; }
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 28px auto 48px;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid #e0e4ef;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(21,32,65,0.06);
+      overflow: hidden;
+    }
+    .head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: 22px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .sub, .status {
+      color: #6b7a99;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .primary { background: #152041; color: #fff; }
+    .secondary { background: #e0e4ef; color: #152041; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat {
+      background: #fff;
+      border: 1px solid #e0e4ef;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .stat-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: #152041;
+      margin-bottom: 3px;
+    }
+    .stat-label {
+      color: #6b7a99;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      background: #152041;
+      color: #FBBA12;
+      text-align: left;
+      padding: 13px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid #eef1f7;
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .pass { background: #dcfce7; color: #15803d; }
+    .fail { background: #fee2e2; color: #b91c1c; }
+    .empty {
+      padding: 22px;
+      color: #6b7a99;
+      font-size: 13px;
+    }
+    .error { color: #b91c1c; font-weight: 700; }
+    .hidden { display: none; }
+    @media (max-width: 760px) {
+      .head { flex-direction: column; }
+      .actions { justify-content: flex-start; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .panel { overflow-x: auto; }
+      table { min-width: 760px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="brand">Simpro <span>Lightning</span></div>
+    <div>Certification Admin</div>
+  </nav>
+
+  <main class="wrap">
+    <div class="head">
+      <div>
+        <h1>Certification Results</h1>
+        <p class="sub">View the latest status for each user who has completed the Lightning SE Certification exam.</p>
+        <p class="status" id="status">Sign in with an admin account to load results.</p>
+      </div>
+      <div class="actions">
+        <button class="primary" id="sign-in" onclick="signInWithGoogle()">Continue With Google</button>
+        <button class="secondary hidden" id="refresh" onclick="loadCertifications()">Refresh</button>
+        <button class="secondary hidden" id="sign-out" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-val" id="total-users">0</div>
+        <div class="stat-label">Users</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="certified-users">0</div>
+        <div class="stat-label">Certified</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="attempts">0</div>
+        <div class="stat-label">Attempts</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="pass-rate">0%</div>
+        <div class="stat-label">Certification Rate</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Best</th>
+            <th>Latest</th>
+            <th>Attempts</th>
+            <th>Certified At</th>
+            <th>Last Attempt</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty">No certification records loaded.</div>
+    </section>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="./firebase-config.js"></script>
+  <script>
+    firebase.initializeApp(window.firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    function fmtDate(value) {
+      if (!value) return '-';
+      const date = value.toDate ? value.toDate() : new Date(value);
+      return new Intl.DateTimeFormat('en-GB', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(date);
+    }
+
+    function escapeHtml(value) {
+      return String(value || '-').replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function setStatus(message, isError = false) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${isError ? 'error' : ''}`.trim();
+    }
+
+    function setSignedInUI(isSignedIn) {
+      document.getElementById('sign-in').classList.toggle('hidden', isSignedIn);
+      document.getElementById('sign-out').classList.toggle('hidden', !isSignedIn);
+      document.getElementById('refresh').classList.toggle('hidden', !isSignedIn);
+    }
+
+    async function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await auth.signInWithPopup(provider);
+    }
+
+    async function signOut() {
+      await auth.signOut();
+      renderRows([]);
+      setStatus('Sign in with an admin account to load results.');
+    }
+
+    async function loadCertifications() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      try {
+        setStatus(`Loading results as ${user.email}...`);
+        const adminDoc = await db.collection('admins').doc(user.uid).get();
+        if (!adminDoc.exists) {
+          setStatus(`Signed in as ${user.email}, but this account is not an admin. Add admins/${user.uid} in Firestore to grant access.`, true);
+          renderRows([]);
+          return;
+        }
+
+        const snapshot = await db.collection('certifications').orderBy('updatedAt', 'desc').get();
+        const records = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        renderRows(records);
+        setStatus(`Loaded ${records.length} certification record${records.length === 1 ? '' : 's'}.`);
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    }
+
+    function renderRows(records) {
+      const rows = document.getElementById('rows');
+      const empty = document.getElementById('empty');
+      rows.innerHTML = '';
+      empty.style.display = records.length ? 'none' : 'block';
+
+      const certified = records.filter((record) => record.passed).length;
+      const attempts = records.reduce((sum, record) => sum + (record.attemptsCount || 0), 0);
+      document.getElementById('total-users').textContent = records.length;
+      document.getElementById('certified-users').textContent = certified;
+      document.getElementById('attempts').textContent = attempts;
+      document.getElementById('pass-rate').textContent = records.length
+        ? `${Math.round((certified / records.length) * 100)}%`
+        : '0%';
+
+      records.forEach((record) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${escapeHtml(record.displayName)}</td>
+          <td>${escapeHtml(record.email)}</td>
+          <td><span class="badge ${record.passed ? 'pass' : 'fail'}">${record.passed ? 'Certified' : 'Not Certified'}</span></td>
+          <td>${record.bestPercent || 0}% (${record.bestScore || 0}/${record.totalQuestions || 0})</td>
+          <td>${record.latestPercent || 0}% (${record.latestScore || 0}/${record.totalQuestions || 0})</td>
+          <td>${record.attemptsCount || 0}</td>
+          <td>${fmtDate(record.certifiedAt)}</td>
+          <td>${fmtDate(record.lastAttemptAt)}</td>
+        `;
+        rows.appendChild(row);
+      });
+    }
+
+    auth.onAuthStateChanged((user) => {
+      setSignedInUI(Boolean(user));
+      if (user) {
+        loadCertifications();
+      }
+    });
+  </script>
+</body>
+</html>

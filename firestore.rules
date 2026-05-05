@@ -10,6 +10,16 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{userId} {
+      allow read: if ownsUserDoc(userId);
+      allow write: if false;
+    }
+
     match /users/{userId} {
       allow create, update: if ownsUserDoc(userId)
         && request.resource.data.keys().hasOnly([
@@ -62,6 +72,48 @@ service cloud.firestore {
 
       allow read: if signedIn() && resource.data.uid == request.auth.uid;
       allow update, delete: if false;
+    }
+
+    match /certifications/{userId} {
+      allow create, update: if ownsUserDoc(userId)
+        && request.resource.data.keys().hasOnly([
+          'uid',
+          'displayName',
+          'email',
+          'examId',
+          'examTitle',
+          'passed',
+          'latestPassed',
+          'latestScore',
+          'latestPercent',
+          'bestScore',
+          'bestPercent',
+          'totalQuestions',
+          'attemptsCount',
+          'lastAttemptId',
+          'lastAttemptAt',
+          'certifiedAt',
+          'updatedAt'
+        ])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.examId == 'lightning-se-certification'
+        && request.resource.data.displayName is string
+        && request.resource.data.email is string
+        && request.resource.data.passed is bool
+        && request.resource.data.latestPassed is bool
+        && request.resource.data.latestScore is int
+        && request.resource.data.latestPercent is int
+        && request.resource.data.bestScore is int
+        && request.resource.data.bestPercent is int
+        && request.resource.data.totalQuestions is int
+        && request.resource.data.attemptsCount is int
+        && request.resource.data.lastAttemptId is string
+        && request.resource.data.lastAttemptAt is timestamp
+        && (request.resource.data.certifiedAt == null || request.resource.data.certifiedAt is timestamp)
+        && request.resource.data.updatedAt is timestamp;
+
+      allow read: if ownsUserDoc(userId) || isAdmin();
+      allow delete: if false;
     }
   }
 }

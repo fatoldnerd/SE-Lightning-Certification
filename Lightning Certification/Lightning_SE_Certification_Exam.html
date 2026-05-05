@@ -1233,30 +1233,63 @@ async function saveExamAttempt({ pct, passed }) {
   });
 
   try {
-    await db.collection('examAttempts').add({
-      examId: 'lightning-se-certification',
-      examVersion: '2026-04-v1',
-      examTitle: 'Lightning SE Certification Exam',
-      uid: currentUser.uid,
-      displayName: currentUser.displayName || '',
-      email: currentUser.email || '',
-      score,
-      totalQuestions: QUESTIONS.length,
-      percent: pct,
-      passed,
-      passingPercent: 70,
-      answers,
-      durationSeconds,
-      startedAt: examStartedAt ? firebase.firestore.Timestamp.fromDate(examStartedAt) : null,
-      completedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      clientCompletedAt: firebase.firestore.Timestamp.fromDate(completedAt)
+    const attemptRef = db.collection('examAttempts').doc();
+    const userRef = db.collection('users').doc(currentUser.uid);
+    const certificationRef = db.collection('certifications').doc(currentUser.uid);
+
+    await db.runTransaction(async (transaction) => {
+      const certificationDoc = await transaction.get(certificationRef);
+      const existing = certificationDoc.exists ? certificationDoc.data() : {};
+      const bestPercent = Math.max(existing.bestPercent || 0, pct);
+      const bestScore = pct >= (existing.bestPercent || 0) ? score : (existing.bestScore || score);
+      const now = firebase.firestore.FieldValue.serverTimestamp();
+
+      transaction.set(attemptRef, {
+        examId: 'lightning-se-certification',
+        examVersion: '2026-04-v1',
+        examTitle: 'Lightning SE Certification Exam',
+        uid: currentUser.uid,
+        displayName: currentUser.displayName || '',
+        email: currentUser.email || '',
+        score,
+        totalQuestions: QUESTIONS.length,
+        percent: pct,
+        passed,
+        passingPercent: 70,
+        answers,
+        durationSeconds,
+        startedAt: examStartedAt ? firebase.firestore.Timestamp.fromDate(examStartedAt) : null,
+        completedAt: now,
+        clientCompletedAt: firebase.firestore.Timestamp.fromDate(completedAt)
+      });
+
+      transaction.set(userRef, {
+        displayName: currentUser.displayName || '',
+        email: currentUser.email || '',
+        lastAttemptAt: now,
+        updatedAt: now
+      }, { merge: true });
+
+      transaction.set(certificationRef, {
+        uid: currentUser.uid,
+        displayName: currentUser.displayName || '',
+        email: currentUser.email || '',
+        examId: 'lightning-se-certification',
+        examTitle: 'Lightning SE Certification Exam',
+        passed: Boolean(existing.passed || passed),
+        latestPassed: passed,
+        latestScore: score,
+        latestPercent: pct,
+        bestScore,
+        bestPercent,
+        totalQuestions: QUESTIONS.length,
+        attemptsCount: firebase.firestore.FieldValue.increment(1),
+        lastAttemptId: attemptRef.id,
+        lastAttemptAt: now,
+        certifiedAt: existing.certifiedAt || (passed ? now : null),
+        updatedAt: now
+      }, { merge: true });
     });
-    await db.collection('users').doc(currentUser.uid).set({
-      displayName: currentUser.displayName || '',
-      email: currentUser.email || '',
-      lastAttemptAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true });
     saveStatus.textContent = 'Exam attempt saved to Firebase.';
   } catch (error) {
     saveStatus.textContent = `Exam attempt could not be saved: ${error.message}`;
